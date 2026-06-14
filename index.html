@@ -533,6 +533,74 @@
 
     /* Keyword highlight */
     .highlight { color: var(--primary); font-weight: 600; }
+
+    /* Favorite button */
+    .fav-btn {
+      background: none;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    .fav-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .fav-btn-active {
+      color: #f59e0b;
+      border-color: #f59e0b;
+      background: #fef3c7;
+    }
+
+    [data-theme="dark"] .fav-btn-active {
+      background: #422006;
+    }
+
+    /* Favorites section */
+    .favorites-section {
+      margin-top: 20px;
+    }
+
+    .favorites-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .favorites-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .fav-remove-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 4px 6px;
+      margin-left: 4px;
+      border-radius: 50%;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .fav-remove-btn:hover {
+      color: var(--harmful);
+      background: var(--harmful-bg);
+    }
   </style>
 </head>
 <body>

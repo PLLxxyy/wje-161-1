@@ -1,8 +1,8 @@
 import React from 'react'
-import { PageType } from '../types'
-import { CategoryType, SearchHistoryItem } from '../types'
+import { PageType, CategoryType, SearchHistoryItem } from '../types'
 import { categories } from '../data/items'
-import { getHistory, clearHistory } from '../utils/storage'
+import { getItemById } from '../data/items'
+import { getHistory, clearHistory, getFavorites, removeFavorite } from '../utils/storage'
 import { searchItems, highlightText } from '../utils/search'
 
 interface Props {
@@ -12,6 +12,7 @@ interface Props {
   onCategoryClick: (type: CategoryType) => void
   onDetailClick: (id: string) => void
   onNavigate: (page: PageType) => void
+  favoriteVersion?: number
 }
 
 const Home: React.FC<Props> = ({
@@ -21,9 +22,11 @@ const Home: React.FC<Props> = ({
   onCategoryClick,
   onDetailClick,
   onNavigate,
+  favoriteVersion,
 }) => {
   const [history, setHistory] = React.useState<SearchHistoryItem[]>(getHistory())
   const [showDropdown, setShowDropdown] = React.useState(false)
+  const [favoriteIds, setFavoriteIds] = React.useState<string[]>(getFavorites())
 
   const results = React.useMemo(() => searchItems(searchText), [searchText])
   const showResults = searchText.trim().length > 0
@@ -39,6 +42,19 @@ const Home: React.FC<Props> = ({
     clearHistory()
     setHistory([])
   }
+
+  React.useEffect(() => {
+    setFavoriteIds(getFavorites())
+  }, [favoriteVersion])
+
+  const handleRemoveFavorite = (id: string) => {
+    removeFavorite(id)
+    setFavoriteIds(getFavorites())
+  }
+
+  const favoriteItems = React.useMemo(() => {
+    return favoriteIds.map(id => getItemById(id)).filter(Boolean)
+  }, [favoriteIds])
 
   return (
     <div className="container fade-in">
@@ -86,6 +102,41 @@ const Home: React.FC<Props> = ({
               </div>
             ))
           )}
+        </div>
+      )}
+
+      {favoriteItems.length > 0 && (
+        <div className="favorites-section fade-in">
+          <div className="favorites-header">
+            <h2 style={{ fontSize: 17, fontWeight: 700 }}>⭐ 已收藏</h2>
+          </div>
+          <div className="favorites-list">
+            {favoriteItems.map(item => {
+              const cat = categories.find(c => c.type === item!.category)
+              return (
+                <div
+                  key={item!.id}
+                  className={`result-item ${item!.category === 'recycle' ? 'recycle-border' : item!.category === 'harmful' ? 'harmful-border' : item!.category === 'kitchen' ? 'kitchen-border' : 'other-border'}`}
+                  onClick={() => onDetailClick(item!.id)}
+                >
+                  <div className="info">
+                    <div className="name">{item!.name}</div>
+                    <div className="tip">{item!.description.slice(0, 40)}...</div>
+                  </div>
+                  <span className={`tag tag-${item!.category}`}>
+                    {cat?.name}
+                  </span>
+                  <button
+                    className="fav-remove-btn"
+                    onClick={e => { e.stopPropagation(); handleRemoveFavorite(item!.id) }}
+                    title="取消收藏"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )
+            })}
+          </div>
         </div>
       )}
 

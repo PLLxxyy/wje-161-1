@@ -1,10 +1,12 @@
 import React from 'react'
 import { CategoryType } from '../types'
 import { getItemById, categoryMap } from '../data/items'
+import { isFavorite, toggleFavorite } from '../utils/storage'
 
 interface Props {
   itemId: string
   onBack: () => void
+  onFavoriteChange?: () => void
 }
 
 const infoBoxClassMap: Record<CategoryType, string> = {
@@ -14,7 +16,15 @@ const infoBoxClassMap: Record<CategoryType, string> = {
   other: 'info-box-gray',
 }
 
-const ItemDetail: React.FC<Props> = ({ itemId, onBack }) => {
+const ItemDetail: React.FC<Props> = ({ itemId, onBack, onFavoriteChange }) => {
+  const [favorited, setFavorited] = React.useState(isFavorite(itemId))
+
+  const handleToggleFavorite = () => {
+    toggleFavorite(itemId)
+    setFavorited(prev => !prev)
+    onFavoriteChange?.()
+  }
+
   const item = getItemById(itemId)
 
   if (!item) {
@@ -38,12 +48,19 @@ const ItemDetail: React.FC<Props> = ({ itemId, onBack }) => {
       <div className="detail-card">
         <div className="detail-header">
           <div className="detail-emoji">{cat.emoji}</div>
-          <div>
+          <div style={{ flex: 1 }}>
             <div className="detail-title">{item.name}</div>
             <div className="detail-subtitle">
               <span className={`tag ${cat.tagClass}`}>{cat.name}</span>
             </div>
           </div>
+          <button
+            className={`fav-btn ${favorited ? 'fav-btn-active' : ''}`}
+            onClick={handleToggleFavorite}
+            title={favorited ? '取消收藏' : '收藏'}
+          >
+            {favorited ? '★' : '☆'}
+          </button>
         </div>
 
         <p style={{ fontSize: 14, lineHeight: 1.8, color: 'var(--text-secondary)' }}>

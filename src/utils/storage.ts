@@ -34,6 +34,44 @@ export const getTheme = (): 'light' | 'dark' => {
   return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
+const FAVORITES_KEY = 'waste_favorites'
+
+export const getFavorites = (): string[] => {
+  try {
+    const raw = localStorage.getItem(FAVORITES_KEY)
+    if (!raw) return []
+    return JSON.parse(raw) as string[]
+  } catch {
+    return []
+  }
+}
+
+export const isFavorite = (id: string): boolean => {
+  return getFavorites().includes(id)
+}
+
+export const toggleFavorite = (id: string): string[] => {
+  const favorites = getFavorites()
+  const index = favorites.indexOf(id)
+  if (index >= 0) {
+    favorites.splice(index, 1)
+  } else {
+    favorites.unshift(id)
+  }
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites))
+  return favorites
+}
+
+export const removeFavorite = (id: string): string[] => {
+  const favorites = getFavorites().filter(f => f !== id)
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites))
+  return favorites
+}
+
+export const clearFavorites = (): void => {
+  localStorage.removeItem(FAVORITES_KEY)
+}
+
 export const setTheme = (theme: 'light' | 'dark'): void => {
   localStorage.setItem(THEME_KEY, theme)
   document.documentElement.setAttribute('data-theme', theme)

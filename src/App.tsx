@@ -24,6 +24,7 @@ const App: React.FC = () => {
   const [selectedItemId, setSelectedItemId] = React.useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = React.useState<CategoryType | null>(null)
   const [prevPage, setPrevPage] = React.useState<PageType>('home')
+  const [favoriteVersion, setFavoriteVersion] = React.useState(0)
 
   const toggleTheme = () => {
     const next = theme === 'light' ? 'dark' : 'light'
@@ -102,6 +103,7 @@ const App: React.FC = () => {
           onCategoryClick={handleCategoryClick}
           onDetailClick={handleDetailClick}
           onNavigate={navigateTo}
+          favoriteVersion={favoriteVersion}
         />
       )}
 
@@ -114,7 +116,11 @@ const App: React.FC = () => {
       )}
 
       {page === 'detail' && selectedItemId && (
-        <ItemDetail itemId={selectedItemId} onBack={goBack} />
+        <ItemDetail
+          itemId={selectedItemId}
+          onBack={goBack}
+          onFavoriteChange={() => setFavoriteVersion(v => v + 1)}
+        />
       )}
 
       {page === 'category' && selectedCategory && (

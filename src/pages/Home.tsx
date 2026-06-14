@@ -130,6 +130,7 @@ const Home: React.FC<Props> = ({
                     className="fav-remove-btn"
                     onClick={e => { e.stopPropagation(); handleRemoveFavorite(item!.id) }}
                     title="取消收藏"
+                    aria-label={`取消收藏${item!.name}`}
                   >
                     ✕
                   </button>

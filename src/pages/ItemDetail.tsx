@@ -19,6 +19,10 @@ const infoBoxClassMap: Record<CategoryType, string> = {
 const ItemDetail: React.FC<Props> = ({ itemId, onBack, onFavoriteChange }) => {
   const [favorited, setFavorited] = React.useState(isFavorite(itemId))
 
+  React.useEffect(() => {
+    setFavorited(isFavorite(itemId))
+  }, [itemId])
+
   const handleToggleFavorite = () => {
     toggleFavorite(itemId)
     setFavorited(prev => !prev)

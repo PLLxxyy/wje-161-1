@@ -43,7 +43,7 @@ describe('首页已收藏列表回看', () => {
     expect(screen.getByText('⭐ 已收藏')).toBeInTheDocument()
     expect(screen.getByText('旧报纸')).toBeInTheDocument()
     expect(screen.getByText('废电池')).toBeInTheDocument()
-    expect(screen.getAllByRole('button', { name: '取消收藏' })).toHaveLength(2)
+    expect(screen.getAllByRole('button', { name: /取消收藏/ })).toHaveLength(2)
   })
 
   it('收藏顺序与添加顺序一致（最近收藏的排在前）', () => {
@@ -80,7 +80,7 @@ describe('首页已收藏列表回看', () => {
     toggleFavorite('h001')
     render(<Home {...makeProps({ onDetailClick })} />)
 
-    const removeBtns = screen.getAllByRole('button', { name: '取消收藏' })
+    const removeBtns = screen.getAllByRole('button', { name: /取消收藏/ })
     expect(removeBtns).toHaveLength(2)
 
     fireEvent.click(removeBtns[0])
@@ -110,7 +110,7 @@ describe('首页已收藏列表回看', () => {
     const { rerender } = render(<Home {...makeProps()} />)
     expect(screen.getByText('⭐ 已收藏')).toBeInTheDocument()
 
-    const removeBtn = screen.getByRole('button', { name: '取消收藏' })
+    const removeBtn = screen.getByRole('button', { name: /取消收藏/ })
     fireEvent.click(removeBtn)
 
     expect(screen.queryByText('⭐ 已收藏')).not.toBeInTheDocument()
